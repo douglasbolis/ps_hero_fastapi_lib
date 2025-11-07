@@ -1,6 +1,9 @@
 # ps_hero_fastapi_lib
 
-Código que salva um item com relacionamento no banco de dados, usando o padrão MVC.
+[![Test, Deploy Lib and FastAPI Service](https://github.com/douglasbolis/ps_hero_fastapi_lib/actions/workflows/test-and-deploy-lib.yml/badge.svg)](https://github.com/douglasbolis/ps_hero_fastapi_lib/actions/workflows/test-and-deploy-lib.yml)
+
+Lib de Cadastro de Equipes e Heróis desenvolvida com SQLModel.
+Aplicação de Cadastro de Equipes e Heróis desenvolvida com FastAPI e a lib implementada.
 
 ## Explicando o código
 
@@ -27,17 +30,40 @@ API de exemplo para gerenciar **Heróis** usando **FastAPI**, **SQLModel** (SQLA
 ## 📂 Estrutura do projeto
 
 ```bash
-├─ app/
-│  ├─ main.py                  # inicialização da app e rotas
-│  ├─ database.py              # engine, sessão e inicialização do schema
-│  ├─ models.py                # SQLModel: entidades e schemas (Create/Update/Public)
-│  ├─ controllers/
-│  │  └─ heroes.py             # Controller (Router) da feature "heroes"
-│  ├─ services/
-│  │  └─ hero_service.py       # Regras de negócio
-│  └─ repositories/
-│     └─ hero_repository.py    # Acesso ao banco (CRUD)
-└─ requirements.txt
+.
+├── LICENSE
+├── Makefile
+├── README.md
+├── app
+│   ├── controller                   # Controller (Router)
+│   │   ├── __init__.py
+│   │   ├── generic.py
+│   │   ├── hero.py
+│   │   └── team.py
+│   ├── main.py                      # inicialização da app e rotas
+│   └── test
+│       ├── __init__.py
+│       └── test_controller.py
+├── ps_hero_fastapi_lib
+│   ├── __init__.py
+│   ├── model                        # SQLModel: entidades e schemas (Create/Update/Public)
+│   │   ├── __init__.py
+│   │   ├── dto.py
+│   │   └── models.py
+│   ├── repository
+│   │   ├── __init__.py
+│   │   └── base.py                  # Acesso ao banco (CRUD)
+│   ├── service
+│   │   ├── __init__.py
+│   │   └── base.py                  # Regras de negócio
+│   ├── test
+│   │   ├── __init__.py
+│   │   └── test_models.py
+│   └── util
+│       ├── __init__.py
+│       └── database.py              # Engine, sessão e inicialização do schema
+├── requirements.txt
+└── setup.py
 ```
 
 ---
