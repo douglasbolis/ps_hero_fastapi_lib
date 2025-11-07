@@ -10,9 +10,12 @@ engine = create_engine(DATABASE_URL, echo=False, connect_args=connect_args)
 
 def init_db() -> None:
     SQLModel.metadata.create_all(engine)
+# fim_def
 
 def get_session():
     with Session(engine) as session:
         yield session
+    # fim_with
+# fim_def
 
 SessionDep = Annotated[Session, Depends(get_session)]

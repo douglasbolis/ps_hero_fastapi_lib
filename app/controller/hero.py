@@ -2,8 +2,8 @@
 from fastapi import HTTPException
 from sqlmodel import Session, select
 from controller.generic import create_crud_router, Hooks
-from model.models import Hero, Team
-from model.dto import HeroCreate, HeroUpdate, HeroRead
+from ps_hero_fastapi_lib.model.models import Hero, Team
+from ps_hero_fastapi_lib.model.dto import HeroCreate, HeroUpdate, HeroRead
 
 class HeroHooks(Hooks[Hero, HeroCreate, HeroUpdate]):
     def pre_create(self, payload: HeroCreate, session: Session) -> None:
@@ -11,12 +11,17 @@ class HeroHooks(Hooks[Hero, HeroCreate, HeroUpdate]):
         if payload.team_id is not None and payload.team_id != 0:
             if not session.get(Team, payload.team_id):
                 raise HTTPException(400, "team_id inválido")
+        # fim_if
+    # fim_def
 
     def pre_update(self, payload: HeroUpdate, session: Session, obj: Hero) -> None:
         # se vai alterar team_id, valida
         if payload.team_id is not None:
             if payload.team_id != 0 and not session.get(Team, payload.team_id):
                 raise HTTPException(400, "team_id inválido")
+        # fim_if
+    # fim_def
+# fim_class
 
 router = create_crud_router(
     model=Hero,

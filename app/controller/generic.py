@@ -2,9 +2,9 @@
 from typing import Any, Callable, Generic, Optional, Type, TypeVar
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import SQLModel, Session
-from util.database import get_session
-from repository.base import Repository
-from service.base import Service
+from ps_hero_fastapi_lib.util.database import get_session
+from ps_hero_fastapi_lib.repository.base import Repository
+from ps_hero_fastapi_lib.service.base import Service
 
 ModelT = TypeVar("ModelT", bound=SQLModel)
 CreateT = TypeVar("CreateT", bound=SQLModel)
@@ -18,6 +18,7 @@ class Hooks(Generic[ModelT, CreateT, UpdateT]):
     def pre_create(self, payload: CreateT, session: Session) -> None: ...
     def pre_update(self, payload: UpdateT, session: Session, obj: ModelT) -> None: ...
     def pre_delete(self, session: Session, obj: ModelT) -> None: ...
+# fim_class
 
 def create_crud_router(
     *,
@@ -43,7 +44,9 @@ def create_crud_router(
     def create_item(payload: create_schema, session: Session = Depends(get_session)):
         if hasattr(_hooks, "pre_create") and callable(_hooks.pre_create):
             _hooks.pre_create(payload, session)
+        # fim_if
         return service.create(session, payload)
+    # fim_def
 
     @router.get("/", response_model=list[read_schema])
     def list_items(
@@ -52,13 +55,16 @@ def create_crud_router(
         limit: int = Query(100, le=page_size_limit),
     ):
         return service.list(session, offset, limit)
+    # fim_def
 
     @router.get("/{item_id}", response_model=read_schema)
     def get_item(item_id: int, session: Session = Depends(get_session)):
         obj = service.get(session, item_id)
         if not obj:
             raise HTTPException(404, "Not found")
+        # fim_if
         return obj
+    # fim_def
 
     @router.patch("/{item_id}", response_model=read_schema)
     def update_item(item_id: int, payload: update_schema, session: Session = Depends(get_session)):
@@ -67,10 +73,13 @@ def create_crud_router(
             raise HTTPException(404, "Not found")
         if hasattr(_hooks, "pre_update") and callable(_hooks.pre_update):
             _hooks.pre_update(payload, session, obj)
+        # fim_if
         try:
             return service.update(session, item_id, payload)
         except ValueError:
             raise HTTPException(404, "Not found")
+        # fim_try
+    # fim_def
 
     @router.delete("/{item_id}", status_code=204)
     def delete_item(item_id: int, session: Session = Depends(get_session)):
@@ -79,9 +88,13 @@ def create_crud_router(
             raise HTTPException(404, "Not found")
         if hasattr(_hooks, "pre_delete") and callable(_hooks.pre_delete):
             _hooks.pre_delete(session, obj)
+        # fim_if
         try:
             service.delete(session, item_id)
         except ValueError:
             raise HTTPException(404, "Not found")
+        # fim_try
+    # fim_def
 
     return router
+# fim_def

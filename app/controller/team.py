@@ -1,7 +1,7 @@
 # app/routers/team.py
 from controller.generic import create_crud_router
-from model.models import Team 
-from model.dto import TeamCreate, TeamUpdate, TeamRead
+from ps_hero_fastapi_lib.model.models import Team 
+from ps_hero_fastapi_lib.model.dto import TeamCreate, TeamUpdate, TeamRead
 
 router = create_crud_router(
     model=Team,
